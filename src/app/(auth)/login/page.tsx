@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Zap, Loader2 } from "lucide-react";
 import { login } from "@/lib/auth";
 import { useAuthStore } from "@/store/authStore";
+import GoogleButton from "@/components/GoogleButton";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -76,6 +77,11 @@ export default function LoginPage() {
             Log in
           </button>
         </form>
+
+        <div className="my-4 flex items-center gap-3 text-xs text-muted">
+          <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+        </div>
+        <GoogleButton />
 
         <div className="mt-4 flex items-center justify-between text-sm">
           <Link href="/forgot-password" className="text-muted hover:text-white">

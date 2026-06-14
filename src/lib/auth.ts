@@ -1,5 +1,17 @@
+import { OAuthProvider } from "appwrite";
 import { account, ID } from "@/lib/appwrite";
 import type { AppUser } from "@/types";
+
+/**
+ * Start the Google OAuth flow. Appwrite redirects the browser to Google and
+ * back to `successUrl` (logged in) or `failureUrl` (cancelled/error).
+ * Requires the Google provider to be enabled in the Appwrite console.
+ */
+export function loginWithGoogle(): void {
+  const base =
+    typeof window !== "undefined" ? window.location.origin : "https://zesa.tapiwa.me";
+  account.createOAuth2Session(OAuthProvider.Google, `${base}/app/`, `${base}/login/`);
+}
 
 export async function register(
   name: string,

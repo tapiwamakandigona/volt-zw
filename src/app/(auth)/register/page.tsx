@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Zap, Loader2 } from "lucide-react";
 import { register } from "@/lib/auth";
 import { useAuthStore } from "@/store/authStore";
+import GoogleButton from "@/components/GoogleButton";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -103,6 +104,11 @@ export default function RegisterPage() {
             Create account
           </button>
         </form>
+
+        <div className="my-4 flex items-center gap-3 text-xs text-muted">
+          <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+        </div>
+        <GoogleButton label="Sign up with Google" />
 
         <p className="mt-4 text-center text-sm text-muted">
           Already have an account?{" "}
