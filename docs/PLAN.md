@@ -82,14 +82,15 @@ functions/
 - [x] Auth: login + register pages, auth store, `lib/auth.ts`
 - [x] Landing page (SEO)
 - [x] Capacitor config + GitHub Actions (CI + APK)
-- [ ] Dashboard shell: Sidebar (desktop) + BottomNav (mobile), TopBar
-- [ ] Dashboard home (BalanceCard, QuickActions, RecentTokens)
+- [x] Dashboard shell: Sidebar (desktop) + BottomNav (mobile), TopBar
+- [x] Dashboard home (stats, QuickActions, RecentTokens) + data layer (lib/database.ts), app store, AI client (lib/ai.ts)
 - [ ] Meters CRUD
 - [ ] Token Vault (add form + grouped list + copy)
-- [ ] Tariff Calculator UI (engine done) + Usage Calculator
+- [x] Tariff Calculator UI (live, with tier breakdown)
+- [ ] Usage Calculator
 - [ ] Token Recovery screen
 - [ ] Load Shedding screen (static JSON, owner-updatable)
-- [ ] Settings (account, subscription/upgrade with EcoCash, preferences, theme)
+- [x] Settings (account, subscription/EcoCash upgrade, logout)
 - [ ] Premium gate UI (lock modals + payment-ref flow)
 - [ ] Spend Tracker (Recharts) + Usage history
 - [ ] Outage Map (Leaflet + community reports)
