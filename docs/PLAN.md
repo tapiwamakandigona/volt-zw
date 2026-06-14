@@ -119,3 +119,13 @@ Payment (premium): EcoCash **0774483250 — Tapiwa Makandigona**.
   middleware, dynamic SSR). Use Appwrite Functions for any server logic.
 - Use named collection IDs (they match the names above), not random IDs.
 - Keep the design dark-first with the electric-green accent.
+
+## Live Preview Deployment (Appwrite Sites)
+- **Site ID:** `voltzw-web` (project `voltzw`, region fra). Framework "other", buildRuntime node-22, adapter static, install `npm install`, build `npm run build`, output `./out`.
+- **Live preview URL:** https://6a2e8be0beae97f02fe3.appwrite.network (auto default domain, verified). All routes 200 (trailingSlash on).
+- **Deploy method:** manual tarball upload of repo source via Sites API → Appwrite cloud build runs npm install + next build (solves no-local-node). Build ~7min cold. Deployment id `6a2e8be094f424059765`, status ready, activated.
+- Env vars NOT set on site — code has correct production fallbacks for all NEXT_PUBLIC_* values, so build works as-is. (Set them explicitly later if values diverge.)
+- **To redeploy:** tar repo (exclude .git/node_modules/out/.next) → POST /v1/sites/voltzw-web/deployments with code=@tarball, activate=true. Or connect GitHub repo in console for auto-deploy on push (recommended later).
+- **Console access (programmatic):** login POST /v1/account/sessions/email with X-Appwrite-Project: console (susanbayner76@gmail.com). Create project API keys via POST /v1/projects/voltzw/keys (keyId unique()).
+- **API KEYS TO ROTATE/DELETE before launch:** setup-key, `sites-deploy-key` (6a2e8bb18c10c191e544), `rules-key` (6a2e8deee241f7175f9d). Stored at /tmp/voltzw_sites_key.txt, /tmp/voltzw_rules_key.txt.
+- Custom domain `zesa.tapiwa.me`: add a proxy rule pointing to site voltzw-web + CNAME in tapiwa.me DNS when ready to go to the real domain.
