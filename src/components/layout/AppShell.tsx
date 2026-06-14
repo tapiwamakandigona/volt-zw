@@ -68,7 +68,7 @@ export default function AppShell({
       {/* Main column */}
       <div className="md:pl-60">
         <TopBar title={title} />
-        <main className="mx-auto max-w-2xl px-5 pb-24 pt-5 md:pb-10">{children}</main>
+        <main className="mx-auto max-w-2xl px-5 pb-[calc(env(safe-area-inset-bottom)+6rem)] pt-5 md:pb-10">{children}</main>
       </div>
 
       <BottomNav />

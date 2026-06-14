@@ -75,7 +75,7 @@ export default function AssistantPage() {
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="rounded-full border border-border bg-panel px-3 py-1.5 text-xs text-muted transition-colors hover:border-primary-600 hover:text-white"
+                  className="press rounded-full border border-border bg-panel px-3.5 py-2 text-xs text-muted transition-colors hover:border-primary-600 hover:text-white active:border-primary-600"
                 >
                   {s}
                 </button>
@@ -101,7 +101,7 @@ export default function AssistantPage() {
           <button
             type="submit"
             disabled={busy || !input.trim()}
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary-600 hover:bg-primary-700 disabled:opacity-50"
+            className="press grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary-600 hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
           >
             <Send className="h-5 w-5" />
           </button>

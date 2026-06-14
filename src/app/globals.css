@@ -4,16 +4,91 @@
 
 :root {
   color-scheme: dark;
+  /* Safe-area helpers (notch / home indicator) */
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  /* Paint the app background immediately to avoid a white flash on load
+     and behind the over-scroll bounce on native. */
+  background-color: #0e0e14;
+  /* Stop pull-to-refresh and scroll chaining (native-app feel). */
+  overscroll-behavior-y: none;
 }
 
 body {
   @apply bg-ink text-white antialiased;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Disable accidental text selection across chrome — feels more native.
+     Real content (inputs, copyable codes) opts back in via .selectable. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Allow selection where it matters */
+input,
+textarea,
+.selectable,
+.selectable * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Kill the grey tap flash and double-tap zoom on interactive elements;
+   keep taps snappy. */
+a,
+button,
+[role="button"],
+label,
+summary,
+.tappable {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Press feedback — subtle scale on active, the single biggest "native" tell. */
+.press {
+  transition: transform 0.12s cubic-bezier(0.2, 0, 0.2, 1);
+  will-change: transform;
+}
+.press:active {
+  transform: scale(0.96);
+}
+
+/* Aligned, non-jumpy numerals for stats and balances. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Momentum scrolling for inner scroll areas. */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Safe-area utility classes. */
+.pt-safe {
+  padding-top: var(--safe-top);
+}
+.pb-safe {
+  padding-bottom: var(--safe-bottom);
+}
+.h-safe-top {
+  height: var(--safe-top);
+}
+
+/* Bottom-sheet grab handle. */
+.sheet-grabber {
+  height: 4px;
+  width: 36px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 /* Skeleton shimmer for loading states */
@@ -38,11 +113,17 @@ body {
   }
 }
 
-/* Subtle scrollbar */
+/* Subtle scrollbar on desktop; hidden on touch for a cleaner native look. */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
   @apply rounded-full bg-border;
+}
+@media (hover: none) and (pointer: coarse) {
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 }

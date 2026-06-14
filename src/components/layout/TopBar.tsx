@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 export default function TopBar({ title }: { title?: string }) {
   const { user, isPremium } = useAuthStore();
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-ink/90 px-5 py-3 backdrop-blur md:hidden">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-ink/80 px-5 pb-3 pt-[calc(env(safe-area-inset-top)+0.7rem)] backdrop-blur-xl md:hidden">
       <div className="flex items-center gap-2">
         <LogoMark className="h-8 w-8" />
         <span className="text-base font-bold">{title ?? "VoltZW"}</span>

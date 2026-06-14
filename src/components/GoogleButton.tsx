@@ -31,7 +31,7 @@ export default function GoogleButton({ label = "Continue with Google" }: { label
         type="button"
         onClick={onClick}
         disabled={busy}
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-border bg-white px-4 py-3 text-sm font-semibold text-[#1f1f1f] transition-colors hover:bg-white/90 disabled:opacity-70"
+        className="press flex min-h-[48px] w-full items-center justify-center gap-3 rounded-xl border border-border bg-white px-4 py-3 text-sm font-semibold text-[#1f1f1f] transition-colors hover:bg-white/90 active:bg-white/90 disabled:opacity-70"
       >
         {busy ? (
           <Loader2 className="h-5 w-5 animate-spin text-[#1f1f1f]" />

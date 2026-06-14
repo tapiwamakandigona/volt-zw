@@ -73,7 +73,7 @@ export default function BalanceCard({ meter }: { meter: Meter | null }) {
               {units == null ? (
                 <p className="text-lg font-bold text-muted">— kWh</p>
               ) : (
-                <p className="text-2xl font-extrabold">{kwh(units)}</p>
+                <p className="tnum text-2xl font-extrabold">{kwh(units)}</p>
               )}
               <p className={`text-xs font-medium ${style.text}`}>
                 {style.label}
@@ -84,7 +84,7 @@ export default function BalanceCard({ meter }: { meter: Meter | null }) {
           <button
             onClick={() => setShowForm(true)}
             disabled={!meter}
-            className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted hover:text-white disabled:opacity-40"
+            className="press flex min-h-[36px] items-center gap-1 rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted hover:text-white active:text-white disabled:opacity-40"
           >
             <Plus className="h-3.5 w-3.5" /> Update
           </button>
@@ -165,14 +165,15 @@ function BalanceForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-end bg-black/60 p-0 sm:place-items-center sm:p-5">
+    <div className="fixed inset-0 z-50 grid place-items-end bg-black/70 p-0 backdrop-blur-sm sm:place-items-center sm:p-5">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-md rounded-t-3xl border border-border bg-panel p-5 animate-fade-in-up sm:rounded-3xl"
+        className="w-full max-w-md rounded-t-3xl border border-border bg-panel p-5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] animate-fade-in-up sm:rounded-3xl sm:pb-5"
       >
+        <div className="sheet-grabber mx-auto mb-3 sm:hidden" />
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-bold">Update balance</h2>
-          <button type="button" onClick={onClose} className="text-muted hover:text-white">
+          <button type="button" onClick={onClose} className="press -mr-1 grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-white/5 hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -208,7 +209,7 @@ function BalanceForm({
           <button
             type="submit"
             disabled={busy}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold hover:bg-primary-700 disabled:opacity-60"
+            className="press flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold hover:bg-primary-700 active:bg-primary-700 disabled:opacity-60"
           >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />} Save reading
           </button>

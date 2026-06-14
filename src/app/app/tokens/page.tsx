@@ -64,7 +64,7 @@ export default function TokensPage() {
           <button
             onClick={() => setShowForm(true)}
             disabled={meters.length === 0}
-            className="flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold hover:bg-primary-700 disabled:opacity-50"
+            className="press flex min-h-[40px] items-center gap-1 rounded-lg bg-primary-600 px-3.5 py-2 text-sm font-semibold hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
           >
             <Plus className="h-4 w-4" /> Add
           </button>
@@ -150,7 +150,7 @@ function TokenRow({
   return (
     <li className="rounded-2xl border border-border bg-panel p-3">
       <div className="flex items-center justify-between gap-2">
-        <button onClick={copy} className="group flex min-w-0 items-center gap-2 text-left">
+        <button onClick={copy} className="press group flex min-h-[36px] min-w-0 items-center gap-2 text-left">
           <span className="truncate font-mono text-sm">{formatTokenCode(token.tokenCode)}</span>
           {copied ? (
             <Check className="h-4 w-4 shrink-0 text-primary-400" />
@@ -160,7 +160,7 @@ function TokenRow({
         </button>
         <button
           onClick={() => onDelete(token.$id)}
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted hover:bg-danger/10 hover:text-danger"
+          className="press grid h-9 w-9 shrink-0 place-items-center rounded-lg text-muted hover:bg-danger/10 hover:text-danger active:bg-danger/10"
         >
           <Trash2 className="h-4 w-4" />
         </button>
@@ -231,14 +231,15 @@ function TokenForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-end sm:place-items-center bg-black/60 p-0 sm:p-5">
+    <div className="fixed inset-0 z-50 grid place-items-end bg-black/70 p-0 backdrop-blur-sm sm:place-items-center sm:p-5">
       <form
         onSubmit={onSubmit}
-        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-border bg-panel p-5 animate-fade-in-up"
+        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl border border-border bg-panel p-5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] animate-fade-in-up scroll-touch sm:rounded-3xl sm:pb-5"
       >
+        <div className="sheet-grabber mx-auto mb-3 sm:hidden" />
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold">Add token</h2>
-          <button type="button" onClick={onClose} className="text-muted hover:text-white">
+          <button type="button" onClick={onClose} className="press -mr-1 grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-white/5 hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -324,7 +325,7 @@ function TokenForm({
           <button
             type="submit"
             disabled={busy}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold hover:bg-primary-700 disabled:opacity-60"
+            className="press flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold hover:bg-primary-700 active:bg-primary-700 disabled:opacity-60"
           >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />} Save token
           </button>

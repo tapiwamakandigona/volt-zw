@@ -85,17 +85,17 @@ export default function Dashboard() {
       <section className="mt-3 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-border bg-panel p-4">
           <p className="text-xs text-muted">Tokens logged</p>
-          <p className="mt-1 text-2xl font-bold">{loading ? "—" : tokens.length}</p>
+          <p className="tnum mt-1 text-2xl font-bold">{loading ? "—" : tokens.length}</p>
         </div>
         <div className="rounded-2xl border border-border bg-panel p-4">
           <p className="text-xs text-muted">Total units</p>
-          <p className="mt-1 text-2xl font-bold text-primary-400">
+          <p className="tnum mt-1 text-2xl font-bold text-primary-400">
             {loading ? "—" : kwh(totalUnits)}
           </p>
         </div>
         <div className="col-span-2 rounded-2xl border border-border bg-gradient-to-br from-primary-600/20 to-panel p-4">
           <p className="text-xs text-muted">Total spent on power</p>
-          <p className="mt-1 text-3xl font-bold">{loading ? "—" : usd(totalSpent)}</p>
+          <p className="tnum mt-1 text-3xl font-bold">{loading ? "—" : usd(totalSpent)}</p>
         </div>
       </section>
 
@@ -112,7 +112,7 @@ export default function Dashboard() {
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-panel p-4 text-center text-xs font-medium transition-colors hover:border-primary-600/50"
+              className="press flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-2xl border border-border bg-panel p-4 text-center text-xs font-medium transition-colors hover:border-primary-600/50 active:border-primary-600/50"
             >
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-600/15 text-primary-400">
                 <Icon className="h-5 w-5" />
@@ -127,7 +127,7 @@ export default function Dashboard() {
       <section className="mt-6">
         <Link
           href="/app/assistant"
-          className="flex items-center gap-3 rounded-2xl border border-primary-600/30 bg-gradient-to-br from-primary-600/15 to-panel p-4 transition-colors hover:border-primary-600/60"
+          className="press flex items-center gap-3 rounded-2xl border border-primary-600/30 bg-gradient-to-br from-primary-600/15 to-panel p-4 transition-colors hover:border-primary-600/60 active:border-primary-600/60"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-600/20 text-primary-400">
             <Sparkles className="h-5 w-5" />
@@ -150,7 +150,7 @@ export default function Dashboard() {
             <Link
               key={href}
               href={href}
-              className="rounded-2xl border border-border bg-panel p-4 transition-colors hover:border-primary-600/50"
+              className="press rounded-2xl border border-border bg-panel p-4 transition-colors hover:border-primary-600/50 active:border-primary-600/50"
             >
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-600/15 text-primary-400">
                 <Icon className="h-5 w-5" />
@@ -195,7 +195,7 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold">{usd(t.amountPaid)}</p>
+                  <p className="tnum text-sm font-semibold">{usd(t.amountPaid)}</p>
                   {t.unitsReceived ? (
                     <p className="text-xs text-primary-400">{kwh(t.unitsReceived)}</p>
                   ) : null}
