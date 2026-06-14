@@ -31,6 +31,10 @@ export default function TokensPage() {
 
   useEffect(() => {
     refresh();
+    // Auto-open the add form when arriving from a "?add=1" quick action.
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("add")) {
+      setShowForm(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

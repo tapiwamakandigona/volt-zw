@@ -1,15 +1,37 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Crown, Smartphone, ShieldCheck } from "lucide-react";
+import { LogOut, Crown, Smartphone, ShieldCheck, Bell } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import { useAuthStore } from "@/store/authStore";
 import { logout } from "@/lib/auth";
 import { ECOCASH } from "@/lib/appwrite";
+import {
+  alertsEnabled,
+  setAlertsEnabled,
+  requestNotifications,
+  notificationsSupported,
+} from "@/lib/notify";
 
 export default function SettingsPage() {
   const router = useRouter();
   const { user, isPremium, reset } = useAuthStore();
+
+  const [alerts, setAlerts] = useState(false);
+  useEffect(() => setAlerts(alertsEnabled()), []);
+
+  async function toggleAlerts() {
+    if (!alerts) {
+      const granted = await requestNotifications();
+      if (!granted) return; // user denied permission
+      setAlertsEnabled(true);
+      setAlerts(true);
+    } else {
+      setAlertsEnabled(false);
+      setAlerts(false);
+    }
+  }
 
   async function onLogout() {
     await logout();
@@ -65,6 +87,41 @@ export default function SettingsPage() {
               </div>
             </>
           )}
+        </div>
+
+        {/* Low-balance alerts */}
+        <div className="rounded-2xl border border-border bg-panel p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <Bell className="mt-0.5 h-5 w-5 shrink-0 text-primary-400" />
+              <div>
+                <p className="text-sm font-semibold">Low-balance alerts</p>
+                <p className="text-xs text-muted">
+                  {notificationsSupported()
+                    ? "Get notified when your estimated balance runs low."
+                    : "Not supported on this device/browser."}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={alerts}
+              onClick={toggleAlerts}
+              disabled={!notificationsSupported()}
+              className={
+                "relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-40 " +
+                (alerts ? "bg-primary-600" : "bg-border")
+              }
+            >
+              <span
+                className={
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform " +
+                  (alerts ? "translate-x-[22px]" : "translate-x-0.5")
+                }
+              />
+            </button>
+          </div>
         </div>
 
         {/* Get the app */}

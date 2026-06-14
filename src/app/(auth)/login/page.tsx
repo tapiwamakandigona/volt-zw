@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Zap, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { login } from "@/lib/auth";
 import { useAuthStore } from "@/store/authStore";
 import GoogleButton from "@/components/GoogleButton";
+import { LogoMark } from "@/components/Logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,11 +37,11 @@ export default function LoginPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-ink px-5">
       <div className="w-full max-w-sm animate-fade-in-up">
-        <Link href="/" className="mb-8 flex items-center justify-center gap-2">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-600">
-            <Zap className="h-5 w-5 text-white" fill="white" />
+        <Link href="/" className="mb-8 flex flex-col items-center justify-center gap-3">
+          <LogoMark className="h-16 w-16" />
+          <span className="text-xl font-extrabold tracking-tight">
+            Volt<span className="text-primary-400">ZW</span>
           </span>
-          <span className="text-xl font-bold">VoltZW</span>
         </Link>
 
         <h1 className="text-center text-2xl font-bold">Welcome back</h1>

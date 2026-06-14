@@ -37,6 +37,40 @@ jobs:
         run: |
           npx cap add android || npx cap sync android
 
+      - name: Generate launcher icon + splash screen
+        run: |
+          npx @capacitor/assets generate --android \
+            --iconBackgroundColor '#16a34a' \
+            --iconBackgroundColorDark '#0e0e14' \
+            --splashBackgroundColor '#0e0e14' \
+            --splashBackgroundColorDark '#0e0e14'
+          npx cap sync android
+
+      - name: Register voltzw:// deep-link scheme (Google sign-in callback)
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          python3 - "$MANIFEST" <<'PY'
+          import sys, re
+          p = sys.argv[1]
+          s = open(p).read()
+          intent = (
+              '            <intent-filter>\n'
+              '                <action android:name="android.intent.action.VIEW" />\n'
+              '                <category android:name="android.intent.category.DEFAULT" />\n'
+              '                <category android:name="android.intent.category.BROWSABLE" />\n'
+              '                <data android:scheme="voltzw" />\n'
+              '            </intent-filter>\n'
+          )
+          if 'android:scheme="voltzw"' not in s:
+              # inject just before the activity closes
+              s = s.replace('        </activity>', intent + '        </activity>', 1)
+              open(p, 'w').write(s)
+              print('Injected voltzw:// intent-filter')
+          else:
+              print('Scheme already present')
+          PY
+          cat android/app/src/main/AndroidManifest.xml
+
       - name: Build debug APK
         run: |
           cd android

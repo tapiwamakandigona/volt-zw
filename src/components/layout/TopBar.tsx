@@ -1,16 +1,14 @@
 "use client";
 
-import { Zap } from "lucide-react";
+import { LogoMark } from "@/components/Logo";
 import { useAuthStore } from "@/store/authStore";
 
 export default function TopBar({ title }: { title?: string }) {
   const { user, isPremium } = useAuthStore();
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-ink/90 px-5 py-3 backdrop-blur">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-ink/90 px-5 py-3 backdrop-blur md:hidden">
       <div className="flex items-center gap-2">
-        <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary-600">
-          <Zap className="h-4 w-4 text-white" fill="white" />
-        </span>
+        <LogoMark className="h-8 w-8" />
         <span className="text-base font-bold">{title ?? "VoltZW"}</span>
       </div>
       <div className="flex items-center gap-2">

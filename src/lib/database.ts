@@ -6,6 +6,8 @@ import type {
   BalanceLog,
   Subscription,
   TariffRates,
+  OutageReport,
+  OutageType,
 } from "@/types";
 
 /**
@@ -91,6 +93,18 @@ export async function createToken(
   return doc as unknown as Token;
 }
 
+export async function updateToken(id: string, data: Partial<Token>): Promise<Token> {
+  const { $id, userId, ...rest } = data as Token;
+  void $id;
+  void userId;
+  const doc = await databases.updateDocument(DB_ID, COLLECTIONS.tokens, id, rest);
+  return doc as unknown as Token;
+}
+
+export async function markTokenRecovered(id: string, recovered = true): Promise<Token> {
+  return updateToken(id, { isRecovered: recovered });
+}
+
 export async function deleteToken(id: string): Promise<void> {
   await databases.deleteDocument(DB_ID, COLLECTIONS.tokens, id);
 }
@@ -121,6 +135,73 @@ export async function logBalance(
   );
   return doc as unknown as BalanceLog;
 }
+
+/** Most recent balance reading per meter, keyed by meterId. */
+export async function latestBalances(): Promise<Record<string, BalanceLog>> {
+  const me = await account.get();
+  const res = await databases.listDocuments(DB_ID, COLLECTIONS.balanceLogs, [
+    Query.equal("userId", me.$id),
+    Query.orderDesc("logDate"),
+    Query.limit(100),
+  ]);
+  const map: Record<string, BalanceLog> = {};
+  for (const d of res.documents as unknown as BalanceLog[]) {
+    if (!map[d.meterId]) map[d.meterId] = d;
+  }
+  return map;
+}
+
+/* --------------------------- Outage reports ----------------------- */
+
+export async function listOutages(): Promise<OutageReport[]> {
+  const res = await databases.listDocuments(DB_ID, COLLECTIONS.outageReports, [
+    Query.orderDesc("timestamp"),
+    Query.limit(200),
+  ]);
+  return res.documents as unknown as OutageReport[];
+}
+
+export async function createOutage(
+  data: Pick<
+    OutageReport,
+    "suburb" | "city" | "latitude" | "longitude" | "reportType" | "description"
+  >,
+): Promise<OutageReport> {
+  const me = await account.get();
+  const role = Role.user(me.$id);
+  // Outage reports are community-visible: anyone can read, only owner edits.
+  const doc = await databases.createDocument(
+    DB_ID,
+    COLLECTIONS.outageReports,
+    ID.unique(),
+    {
+      ...data,
+      reporterId: me.$id,
+      timestamp: new Date().toISOString(),
+      confirmedCount: 0,
+      isActive: true,
+    },
+    [
+      Permission.read(Role.any()),
+      // Any signed-in user can bump the "confirmed" count; owner can delete.
+      Permission.update(Role.users()),
+      Permission.delete(role),
+    ],
+  );
+  return doc as unknown as OutageReport;
+}
+
+export async function confirmOutage(report: OutageReport): Promise<OutageReport> {
+  const doc = await databases.updateDocument(
+    DB_ID,
+    COLLECTIONS.outageReports,
+    report.$id,
+    { confirmedCount: (report.confirmedCount || 0) + 1 },
+  );
+  return doc as unknown as OutageReport;
+}
+
+export type { OutageType };
 
 /* -------------------------- Subscription -------------------------- */
 

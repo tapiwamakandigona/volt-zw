@@ -2,8 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Wallet, Calculator, Gauge, Settings, Zap } from "lucide-react";
+import {
+  Home,
+  Wallet,
+  Calculator,
+  Gauge,
+  Settings,
+  Sparkles,
+  LifeBuoy,
+  MapPin,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/Logo";
 import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
 
@@ -12,6 +22,9 @@ const NAV = [
   { href: "/app/tokens", label: "Token Vault", icon: Wallet },
   { href: "/app/calculator", label: "Calculator", icon: Calculator },
   { href: "/app/meters", label: "My Meters", icon: Gauge },
+  { href: "/app/assistant", label: "Ask VoltZW", icon: Sparkles },
+  { href: "/app/recovery", label: "Token Recovery", icon: LifeBuoy },
+  { href: "/app/outages", label: "Outage Map", icon: MapPin },
   { href: "/app/settings", label: "Settings", icon: Settings },
 ];
 
@@ -27,12 +40,9 @@ export default function AppShell({
     <div className="min-h-screen bg-ink text-white">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col border-r border-border bg-sidebar px-3 py-5 md:flex">
-        <div className="mb-8 flex items-center gap-2 px-2">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-600">
-            <Zap className="h-5 w-5 text-white" fill="white" />
-          </span>
-          <span className="text-lg font-bold">VoltZW</span>
-        </div>
+        <Link href="/app" className="mb-8 px-2">
+          <Logo />
+        </Link>
         <nav className="flex flex-col gap-1">
           {NAV.map(({ href, label, icon: Icon, exact }) => {
             const active = exact ? pathname === href : pathname.startsWith(href);

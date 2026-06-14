@@ -2,31 +2,57 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Wallet, Calculator, Gauge, Plus, ArrowRight, Sparkles } from "lucide-react";
+import {
+  Wallet,
+  Calculator,
+  Gauge,
+  Plus,
+  ArrowRight,
+  Sparkles,
+  LifeBuoy,
+  MapPin,
+} from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
+import BalanceCard from "@/components/BalanceCard";
+import SpendChart from "@/components/SpendChart";
 import { useAuthStore } from "@/store/authStore";
 import { useAppStore } from "@/store/appStore";
 import { listMeters, listTokens } from "@/lib/database";
 import { usd, kwh, formatTokenCode } from "@/lib/utils";
-import type { Token } from "@/types";
+import type { Token, Meter } from "@/types";
 
 const QUICK = [
-  { href: "/app/tokens", label: "Add token", icon: Plus },
+  { href: "/app/tokens?add=1", label: "Add token", icon: Plus },
   { href: "/app/calculator", label: "Calculator", icon: Calculator },
   { href: "/app/meters", label: "My meters", icon: Gauge },
 ];
 
+const EXPLORE = [
+  {
+    href: "/app/recovery",
+    label: "Token Recovery",
+    desc: "Recover a lost token",
+    icon: LifeBuoy,
+  },
+  {
+    href: "/app/outages",
+    label: "Outage Map",
+    desc: "Live power reports nearby",
+    icon: MapPin,
+  },
+];
+
 export default function Dashboard() {
   const { user } = useAuthStore();
-  const { setMeters } = useAppStore();
+  const { meters, setMeters } = useAppStore();
   const [tokens, setTokens] = useState<Token[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const [meters, toks] = await Promise.all([listMeters(), listTokens()]);
-        setMeters(meters);
+        const [ms, toks] = await Promise.all([listMeters(), listTokens()]);
+        setMeters(ms);
         setTokens(toks);
       } catch {
         /* ignore — likely empty state */
@@ -38,6 +64,8 @@ export default function Dashboard() {
 
   const totalSpent = tokens.reduce((s, t) => s + (t.amountPaid || 0), 0);
   const totalUnits = tokens.reduce((s, t) => s + (t.unitsReceived || 0), 0);
+  const defaultMeter: Meter | null =
+    meters.find((m) => m.isDefault) ?? meters[0] ?? null;
 
   return (
     <AppShell title="Home">
@@ -48,8 +76,13 @@ export default function Dashboard() {
         <p className="mt-1 text-sm text-muted">Here&apos;s your electricity at a glance.</p>
       </section>
 
+      {/* Balance + alerts */}
+      <section className="mt-5">
+        <BalanceCard meter={defaultMeter} />
+      </section>
+
       {/* Stat cards */}
-      <section className="mt-5 grid grid-cols-2 gap-3">
+      <section className="mt-3 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-border bg-panel p-4">
           <p className="text-xs text-muted">Tokens logged</p>
           <p className="mt-1 text-2xl font-bold">{loading ? "—" : tokens.length}</p>
@@ -64,6 +97,11 @@ export default function Dashboard() {
           <p className="text-xs text-muted">Total spent on power</p>
           <p className="mt-1 text-3xl font-bold">{loading ? "—" : usd(totalSpent)}</p>
         </div>
+      </section>
+
+      {/* Spend chart */}
+      <section className="mt-3">
+        <SpendChart tokens={tokens} />
       </section>
 
       {/* Quick actions */}
@@ -85,16 +123,42 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* AI teaser */}
-      <section className="mt-6 flex items-center gap-3 rounded-2xl border border-border bg-panel p-4">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-600/15 text-primary-400">
-          <Sparkles className="h-5 w-5" />
-        </span>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold">Ask VoltZW</p>
-          <p className="truncate text-xs text-muted">
-            Free AI helper for ZESA, tokens &amp; saving power — coming soon.
-          </p>
+      {/* Ask VoltZW (live) */}
+      <section className="mt-6">
+        <Link
+          href="/app/assistant"
+          className="flex items-center gap-3 rounded-2xl border border-primary-600/30 bg-gradient-to-br from-primary-600/15 to-panel p-4 transition-colors hover:border-primary-600/60"
+        >
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-600/20 text-primary-400">
+            <Sparkles className="h-5 w-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">Ask VoltZW</p>
+            <p className="truncate text-xs text-muted">
+              Free AI helper for ZESA, tokens &amp; saving power.
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 shrink-0 text-primary-400" />
+        </Link>
+      </section>
+
+      {/* Explore */}
+      <section className="mt-6">
+        <h2 className="mb-2 text-sm font-semibold text-muted">Explore</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {EXPLORE.map(({ href, label, desc, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="rounded-2xl border border-border bg-panel p-4 transition-colors hover:border-primary-600/50"
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-600/15 text-primary-400">
+                <Icon className="h-5 w-5" />
+              </span>
+              <p className="mt-2 text-sm font-semibold">{label}</p>
+              <p className="text-xs text-muted">{desc}</p>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -110,7 +174,7 @@ export default function Dashboard() {
           <div className="h-20 animate-pulse rounded-2xl bg-panel" />
         ) : tokens.length === 0 ? (
           <Link
-            href="/app/tokens"
+            href="/app/tokens?add=1"
             className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border bg-panel/50 p-8 text-center"
           >
             <Wallet className="h-8 w-8 text-muted" />
