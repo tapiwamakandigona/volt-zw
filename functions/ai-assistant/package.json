@@ -1,0 +1,13 @@
+{
+  "name": "voltzw-ai-assistant",
+  "version": "1.0.0",
+  "description": "VoltZW AI assistant + rates API (Appwrite Function)",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "node-appwrite": "^14.0.0"
+  }
+}
