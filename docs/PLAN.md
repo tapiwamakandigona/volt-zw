@@ -129,3 +129,11 @@ Payment (premium): EcoCash **0774483250 — Tapiwa Makandigona**.
 - **Console access (programmatic):** login POST /v1/account/sessions/email with X-Appwrite-Project: console (susanbayner76@gmail.com). Create project API keys via POST /v1/projects/voltzw/keys (keyId unique()).
 - **API KEYS TO ROTATE/DELETE before launch:** setup-key, `sites-deploy-key` (6a2e8bb18c10c191e544), `rules-key` (6a2e8deee241f7175f9d). Stored at /tmp/voltzw_sites_key.txt, /tmp/voltzw_rules_key.txt.
 - Custom domain `zesa.tapiwa.me`: add a proxy rule pointing to site voltzw-web + CNAME in tapiwa.me DNS when ready to go to the real domain.
+
+## Custom Domain + Google OAuth + Vault/Meters (session 3)
+- **Custom domain LIVE:** https://zesa.tapiwa.me (proxy rule id 5fbd21fdd8a96edd98f4d87382c9065a, site voltzw-web, status verified, SSL issued). DNS already CNAMEd to Appwrite — no extra DNS step needed.
+- **Token Vault + Meters CRUD built & live** (add/list/copy/delete tokens; add/default/delete meters; per-meter filter; tariff auto-estimate of units).
+- **Google OAuth:** "Continue with Google" button on login + register, wired via account.createOAuth2Session(OAuthProvider.Google, `${origin}/app/`, `${origin}/login/`). NEEDS Google provider enabled in Appwrite console with a Google Cloud OAuth Client ID + Secret to function.
+  - Authorized redirect URI to add in Google Cloud OAuth client: `https://fra.cloud.appwrite.io/v1/account/sessions/oauth2/callback/google/voltzw`
+  - Enable via console: PATCH /v1/projects/voltzw/oauth2 {provider:"google", appId:<clientId>, secret:<secret>, enabled:true} (use console session).
+- Redeploy = re-tar + POST deployment (build ~4-7min, no local node). Latest deployment 6a2e8fded62c58945ca4 ready/active.
